@@ -59,32 +59,32 @@ struct s_ringBuffer
   * @var s_ringBuffer::buffSize
   * Size of the whole ring buffer
   */
-  unsigned int buffSize;
+  volatile unsigned int buffSize;
   /**
   * @var s_ringBuffer::elementSize
   * size of the element the ring buffer stores.
   */
-  unsigned int elementSize;
+  volatile unsigned int elementSize;
   /**
   * @var s_ringBuffer::indexMask
   * mask off overflow bits to index into the array properly.
   */
-  unsigned int indexMask;
+  volatile unsigned int indexMask;
   /**
   * @var s_ringBuffer::b_blocking
   * Boolean for blocking state, true is blocking enabled. 
   */
-  unsigned int b_blocking;
+  volatile unsigned int b_blocking;
   /**
   * @var s_ringBuffer::headIndex
   * head index
   */
-  unsigned int headIndex;
+  volatile unsigned int headIndex;
   /**
   * @var s_ringBuffer::tailIndex
   * tail index
   */
-  unsigned int tailIndex;
+  volatile unsigned int tailIndex;
 
   /**
   * @var s_ringBuffer::rwMutex
@@ -101,7 +101,7 @@ struct s_ringBuffer
   * @var s_ringBuffer::p_buffer
   * pointer allocated with space for storing elements.
   */
-  void *p_buffer;
+  void * volatile p_buffer;
 };
 
 /*********************************************//**
