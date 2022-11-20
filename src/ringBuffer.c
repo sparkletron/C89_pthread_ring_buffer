@@ -49,17 +49,17 @@
 
 /*  private helper functions */
 /*  write size of the ring buffer, no thread protection */
-unsigned int writeSize(struct s_ringBuffer const * const ip_ringBuffer);
+inline unsigned int writeSize(struct s_ringBuffer const * const ip_ringBuffer);
 /*  read size of the ring buffer, no thread protection */
-unsigned int readSize(struct s_ringBuffer const * const ip_ringBuffer);
+inline unsigned int readSize(struct s_ringBuffer const * const ip_ringBuffer);
 /*  raw write to the ring buffer. No thread protection. */
-unsigned int rawWrite(struct s_ringBuffer * const iop_ringBuffer, void *ip_buffer, unsigned int len);
+inline unsigned int rawWrite(struct s_ringBuffer * const iop_ringBuffer, void *ip_buffer, unsigned int len);
 /*  raw read to from the ring buffer. No thread protection. */
-unsigned int rawRead(struct s_ringBuffer * const iop_ringBuffer, void *op_buffer, unsigned int len);
+inline unsigned int rawRead(struct s_ringBuffer * const iop_ringBuffer, void *op_buffer, unsigned int len);
 /*  General allocate method for the buffer. Used in the init and resize methods. */
-unsigned int allocateBuffer(struct s_ringBuffer * const iop_ringBuffer, unsigned int buffSize, unsigned int elementSize);
+inline unsigned int allocateBuffer(struct s_ringBuffer * const iop_ringBuffer, unsigned int buffSize, unsigned int elementSize);
 /*  check the state of blocking, have we timed out? Did we error out? */
-unsigned int checkContinueBlocking(struct s_ringBuffer * const iop_ringBuffer, struct timespec *p_timeToWait);
+inline unsigned int checkContinueBlocking(struct s_ringBuffer * const iop_ringBuffer, struct timespec *p_timeToWait);
 
 /*  public  functions */
 /*  init, calls allocate buffer to setup the size. */
