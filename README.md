@@ -30,7 +30,7 @@ license: MIT
   - See doxygen generated document
 
 ## Example Code
-  - See test/src/ directory for examples.
+  - See eg/src/ directory for examples.
 
 ### Currect Examples
   - file_cp = file copy example program

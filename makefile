@@ -5,11 +5,11 @@ HEADER = $(notdir $(SRC:.c=.h))
 OBJDIR = obj
 OBJECTS = $(addprefix $(OBJDIR)/, $(notdir $(SRC:.c=.o)))
 
-# test application files and object destinations
-TESTDIR = test
-TESTSRC = $(wildcard $(TESTDIR)/$(SRCDIR)/*.c)
-TESTOBJ = $(addprefix $(TESTDIR)/$(OBJDIR)/, $(notdir $(TESTSRC:.c=.o)))
-TEXEC = $(basename $(notdir $(TESTSRC)))
+# example application files and object destinations
+EGDIR = eg
+EGSRC = $(wildcard $(EGDIR)/$(SRCDIR)/*.c)
+EGOBJ = $(addprefix $(EGDIR)/$(OBJDIR)/, $(notdir $(EGSRC:.c=.o)))
+EGEXEC = $(basename $(notdir $(EGSRC)))
 
 # library static vs dynamic
 LIBOUT_STATIC = $(addprefix lib, $(notdir $(SRC:.c=.a)))
@@ -35,13 +35,13 @@ all: lib exe dox_gen
 
 lib: $(LIBOUT_STATIC) $(LIBOUT_DYNA)
 
-exe: $(TEXEC)
+exe: $(EGEXEC)
 
-$(TEXEC): % : $(TESTDIR)/$(OBJDIR)/%.o $(LIBOUT_STATIC)
-	$(CROSS_COMPILE)$(CC) $(CFLAGS) $^ -o $(TESTDIR)/$@ $(TLFLAGS)
+$(EGEXEC): % : $(EGDIR)/$(OBJDIR)/%.o $(LIBOUT_STATIC)
+	$(CROSS_COMPILE)$(CC) $(CFLAGS) $^ -o $(EGDIR)/$@ $(TLFLAGS)
 
-$(TESTDIR)/$(OBJDIR)/%.o : $(TESTDIR)/$(SRCDIR)/%.c
-	mkdir -p $(TESTDIR)/$(OBJDIR)
+$(EGDIR)/$(OBJDIR)/%.o : $(EGDIR)/$(SRCDIR)/%.c
+	mkdir -p $(EGDIR)/$(OBJDIR)
 	$(CROSS_COMPILE)$(CC) $(CFLAGS) $(TLFLAGS) -c $< -o $@
 
 $(LIBOUT_DYNA)  : $(OBJECTS)
@@ -58,5 +58,5 @@ dox_gen:
 	$(DOXYGEN_GEN) $(DOXYGEN_CFG) $(HEADER)
 	
 clean:
-	rm -f $(TESTDIR)/$(TEXEC) $(OBJECTS) $(LIBOUT_STATIC) $(LIBOUT_DYNA)
-	rm -rf $(OBJDIR) $(DOXYGEN_GEN) $(TESTDIR)/$(OBJDIR)
+	rm -f $(EGDIR)/$(EGEXEC) $(OBJECTS) $(LIBOUT_STATIC) $(LIBOUT_DYNA)
+	rm -rf $(OBJDIR) $(DOXYGEN_GEN) $(EGDIR)/$(OBJDIR)
