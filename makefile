@@ -1,13 +1,21 @@
+# library source files and object destinations
 SRCDIR = src
 SRC = $(wildcard $(SRCDIR)/*.c)
 HEADER = $(notdir $(SRC:.c=.h))
 OBJDIR = obj
 OBJECTS = $(addprefix $(OBJDIR)/, $(notdir $(SRC:.c=.o)))
+
+# test application files and object destinations
 TESTDIR = test
-TESTSRC = $(addprefix $(TESTDIR)/, main.c)
-TEXEC = $(addprefix $(TESTDIR)/, test)
+TESTSRC = $(wildcard $(TESTDIR)/$(SRCDIR)/*.c)
+TESTOBJ = $(addprefix $(TESTDIR)/$(OBJDIR)/, $(notdir $(TESTSRC:.c=.o)))
+TEXEC = $(basename $(notdir $(TESTSRC)))
+
+# library static vs dynamic
 LIBOUT_STATIC = $(addprefix lib, $(notdir $(SRC:.c=.a)))
 LIBOUT_DYNA = $(addprefix lib, $(notdir $(SRC:.c=.so)))
+
+# generate documents
 DOXYGEN_GEN = doxygen
 DOXYGEN_CFG = dox.cfg
 
@@ -29,8 +37,12 @@ lib: $(LIBOUT_STATIC) $(LIBOUT_DYNA)
 
 exe: $(TEXEC)
 
-$(TEXEC): $(TESTSRC) $(LIBOUT_STATIC)
-	$(CROSS_COMPILE)$(CC) $(CFLAGS) $^ -o $@ $(TLFLAGS)
+$(TEXEC): % : $(TESTDIR)/$(OBJDIR)/%.o $(LIBOUT_STATIC)
+	$(CROSS_COMPILE)$(CC) $(CFLAGS) $^ -o $(TESTDIR)/$@ $(TLFLAGS)
+
+$(TESTDIR)/$(OBJDIR)/%.o : $(TESTDIR)/$(SRCDIR)/%.c
+	mkdir -p $(TESTDIR)/$(OBJDIR)
+	$(CROSS_COMPILE)$(CC) $(CFLAGS) $(TLFLAGS) -c $< -o $@
 
 $(LIBOUT_DYNA)  : $(OBJECTS)
 	$(CROSS_COMPILE)$(CC) $(DYNAFLAGS) $^ -o $@
@@ -46,5 +58,5 @@ dox_gen:
 	$(DOXYGEN_GEN) $(DOXYGEN_CFG) $(HEADER)
 	
 clean:
-	rm -f $(TEXEC) $(OBJECTS) $(LIBOUT_STATIC) $(LIBOUT_DYNA)
-	rm -rf $(OBJDIR) $(DOXYGEN_GEN)
+	rm -f $(TESTDIR)/$(TEXEC) $(OBJECTS) $(LIBOUT_STATIC) $(LIBOUT_DYNA)
+	rm -rf $(OBJDIR) $(DOXYGEN_GEN) $(TESTDIR)/$(OBJDIR)

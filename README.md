@@ -1,11 +1,36 @@
-## Thread safe C89 ringbuffer
+# Thread safe C89 ring buffer
 
-# documentation in progress.
+Software Library for creating thread safe C89 ring buffers.
 
-C89 ringbuffer for high speed data processing, thread safe.
+author: Jay Convertino
 
-* make libringbuffer.so for dynamic
-* make libringbuffer.a  for static
-* make exe for test application
-* make for all
+data: 2016.12.01
 
+license: MIT
+
+## Release Versions
+### Current
+  - release_v1.3.0
+
+### Past
+  - 1.2 - Code cleanup, added const.
+  - 1.1 - Added timed wait_until to blocking read/write.
+
+## Requirements
+  - GCC
+  - pthread library
+
+## Building
+  - make libringbuffer.so for dynamic
+  - make libringbuffer.a  for static
+  - make exe for test applications
+  - make for all
+
+## Documentation
+  - See doxygen generated document
+
+## Example Code
+  - See test/src/ directory for examples.
+
+### Currect Examples
+  - file_cp = file copy example program
