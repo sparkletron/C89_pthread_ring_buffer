@@ -2,6 +2,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <getopt.h>
 #include <pthread.h>
 
 #include "ringBuffer.h"
@@ -16,14 +19,34 @@ void *consumer(void *data);
 int main(int argc, char *argv[])
 {
   int error = 0;
+  int opt   = 0;
   
   pthread_t producerThread;
   pthread_t consumerThread;
   
   FILE *p_inFile = NULL;
   FILE *p_outFile = NULL;
+
+  char inFileName[256]  = "input.txt";
+  char outFileName[256] = "output.txt";
+
+  while((opt = getopt(argc, argv, "i:o:h")) != -1)
+  {
+    switch(opt)
+    {
+      case 'i':
+        strcpy(inFileName, optarg);
+        break;
+      case 'o':
+        strcpy(outFileName, optarg);
+        break;
+      default:
+        printf("Usage: %s -i filein.txt -o fileout.txt\n", argv[0]);
+        return EXIT_SUCCESS;
+    }
+  }
   
-  p_inFile = fopen("inputfile.txt", "r");
+  p_inFile = fopen(inFileName, "r");
   
   if(!p_inFile)
   {
@@ -32,7 +55,7 @@ int main(int argc, char *argv[])
     return EXIT_FAILURE;
   }
   
-  p_outFile = fopen("outputfile.txt", "w");
+  p_outFile = fopen(outFileName, "w");
   
   if(!p_outFile)
   {
@@ -41,7 +64,9 @@ int main(int argc, char *argv[])
     return EXIT_FAILURE;
   }
   
-/*   printf("CREATING RING BUFFER\n"); */
+#ifdef DEBUG_STATUS
+  printf("CREATING RING BUFFER\n");
+#endif
   
   p_ringBuffer = initRingBuffer(DATACHUNK, 1);
   
@@ -54,9 +79,11 @@ int main(int argc, char *argv[])
     
     return EXIT_FAILURE;
   }
-  
-/*   printf("CREATING PRODUCER THREAD\n"); */
-  
+
+#ifdef DEBUG_STATUS
+  printf("CREATING PRODUCER THREAD\n");
+#endif
+
   error = pthread_create(&producerThread, NULL, producer, p_inFile);
   
   if(error)
@@ -71,8 +98,10 @@ int main(int argc, char *argv[])
     return EXIT_FAILURE;
   }
   
-/*   printf("CREATING CONSUMER THREAD\n"); */
-  
+#ifdef DEBUG_STATUS
+  printf("CREATING CONSUMER THREAD\n");
+#endif
+
   error = pthread_create(&consumerThread, NULL, consumer, p_outFile);
   
   if(error)
@@ -90,21 +119,23 @@ int main(int argc, char *argv[])
     
     return EXIT_FAILURE;
   }
-  
-  ringBufferResize(p_ringBuffer, DATACHUNK / 2, 1);
-  
-/*   printf("BUFFER SIZE %d\n", getRingBufferSize(p_ringBuffer));*/
-  
-/*   printf("THREAD CREATED, WAITING FOR PRODUCER\n"); */
+
+#ifdef DEBUG_STATUS
+  printf("THREAD CREATED, WAITING FOR PRODUCER\n");
+#endif
   
   pthread_join(producerThread, NULL);
-  
-/*   printf("PRODUCER JOINED, WAITING FOR CONSUMER.\n"); */
+
+#ifdef DEBUG_STATUS
+  printf("PRODUCER JOINED, WAITING FOR CONSUMER.\n");
+#endif
   
   pthread_join(consumerThread, NULL);
-  
-/*   printf("CONSUMER JOINED, ENDING PROGRAM.\n"); */
-  
+
+#ifdef DEBUG_STATUS
+  printf("CONSUMER JOINED, ENDING PROGRAM.\n");
+#endif
+
   freeRingBuffer(&p_ringBuffer);
   
   fclose(p_inFile);
