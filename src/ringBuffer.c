@@ -276,7 +276,13 @@ unsigned int ringBufferBlockingWrite(struct s_ringBuffer * const iop_ringBuffer,
 
     while(writeLen > writeSize(iop_ringBuffer))
     {
-      if(!checkContinueBlocking(iop_ringBuffer, p_timeToWait)) return totalWrote;
+      if(!checkContinueBlocking(iop_ringBuffer, p_timeToWait))
+      {
+        /* fix for conditions when a read/write maybe called out of order and exit early with enough data availible */
+        if(writeLen <= writeSize(iop_ringBuffer)) break;
+        
+        return totalWrote;
+      }
     }
 
     wrote = rawWrite(iop_ringBuffer, ip_buffer + totalWrote, writeLen);
@@ -314,15 +320,20 @@ unsigned int ringBufferBlockingRead(struct s_ringBuffer * const iop_ringBuffer, 
   pthread_mutex_lock(&iop_ringBuffer->rwMutex);
   
   len *= iop_ringBuffer->elementSize;
-
+  
   do
   {
-    
     readLen = (len >= getRingBufferByteSize(iop_ringBuffer) ? getRingBufferByteSize(iop_ringBuffer) - 1 : len);
     
     while(readLen > readSize(iop_ringBuffer))
     {
-      if(!checkContinueBlocking(iop_ringBuffer, p_timeToWait)) return totalRead;
+      if(!checkContinueBlocking(iop_ringBuffer, p_timeToWait))
+      {
+        /* fix for conditions when a read/write maybe called out of order and exit early with enough data availible */
+        if(readLen <= readSize(iop_ringBuffer)) break;
+
+        return totalRead;
+      }
     }
     
     read = rawRead(iop_ringBuffer, op_buffer + totalRead, readLen);
@@ -378,6 +389,8 @@ unsigned int ringBufferRead(struct s_ringBuffer * const iop_ringBuffer, void *op
     return 0;
   }
 
+  printf("READING\n");
+  
   if(len <= 0) return totalRead;
 
   pthread_mutex_lock(&iop_ringBuffer->rwMutex);
@@ -625,6 +638,7 @@ unsigned int checkContinueBlocking(struct s_ringBuffer * const iop_ringBuffer, s
      */
     if(pthread_cond_wait(&iop_ringBuffer->condition, &iop_ringBuffer->rwMutex))
     {
+      printf("RECV SIGNAL\n");
       pthread_cond_signal(&iop_ringBuffer->condition);
       return STOP_BLOCKING;
     }
@@ -632,9 +646,11 @@ unsigned int checkContinueBlocking(struct s_ringBuffer * const iop_ringBuffer, s
 
   if(!iop_ringBuffer->b_blocking)
   {
+    printf("STOP BLOCKING\n");
     pthread_mutex_unlock(&iop_ringBuffer->rwMutex);
     return STOP_BLOCKING;
   }
   
+  printf("CONT_BLOCKING\n");
   return CONT_BLOCKING;
 }
