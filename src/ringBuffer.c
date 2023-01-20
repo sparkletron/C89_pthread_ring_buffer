@@ -278,7 +278,10 @@ unsigned int ringBufferBlockingWrite(struct s_ringBuffer * const iop_ringBuffer,
     {
       if(!checkContinueBlocking(iop_ringBuffer, p_timeToWait))
       {
-        /* fix for conditions when a read/write maybe called out of order and exit early with enough data availible */
+        /* mirror read fix, could be an issue... needs testing */
+        if(!iop_ringBuffer->b_blocking) return ringBufferWrite(iop_ringBuffer, ip_buffer, len);
+
+        /* mirror read fix, doesn't seem like it would do much for the write case */
         if(writeLen <= writeSize(iop_ringBuffer)) break;
         
         return totalWrote;
@@ -329,6 +332,9 @@ unsigned int ringBufferBlockingRead(struct s_ringBuffer * const iop_ringBuffer, 
     {
       if(!checkContinueBlocking(iop_ringBuffer, p_timeToWait))
       {
+        /* fix if read is larger then write and block is turned off */
+        if(!iop_ringBuffer->b_blocking) return ringBufferRead(iop_ringBuffer,op_buffer, len);
+
         /* fix for conditions when a read/write maybe called out of order and exit early with enough data availible */
         if(readLen <= readSize(iop_ringBuffer)) break;
 
