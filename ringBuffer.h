@@ -7,9 +7,10 @@
   * data as it can, even if its under the amount requested. Write will write
   * over data even if it has not been read (overwrite). All functions return the 
   * number of elements. BuffSize/elementSize. Not the number of bytes.
-  * @author   John Convertino (electrobs@gmail.com)
-  * @date     12/01/2016
+  * @author  Jay Convertino(electrobs@gmail.com)
+  * @date    12/01/2016
   * @version
+  * 1.4 - Fix for read started before write and write ends blocking in one pass.
   * 1.3 - Added private blocking check method to the blocking read/write.
   * 1.2 - Code cleanup, added const.
   * 1.1 - Added timed wait_until to blocking read/write.

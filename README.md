@@ -4,15 +4,16 @@ Software Library for creating thread safe C89 ring buffers.
 
 author: Jay Convertino
 
-data: 2016.12.01
+date: 2016.12.01
 
 license: MIT
 
 ## Release Versions
 ### Current
-  - release_v1.3.0
+  - release_v1.4.0, Fix for read started before write and write ends blocking in one pass.
 
 ### Past
+  - 1.3 - Added private blocking check method to the blocking read/write.
   - 1.2 - Code cleanup, added const.
   - 1.1 - Added timed wait_until to blocking read/write.
 
