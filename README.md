@@ -10,12 +10,13 @@ license: MIT
 
 ## Release Versions
 ### Current
-  - release_v1.4.0, Fix for read started before write and write ends blocking in one pass.
+  Tag: release_v1.4.0
+  - 1.4.0 - Fix for read started before write and write ends blocking in one pass.
 
 ### Past
-  - 1.3 - Added private blocking check method to the blocking read/write.
-  - 1.2 - Code cleanup, added const.
-  - 1.1 - Added timed wait_until to blocking read/write.
+  - 1.3.0 - Added private blocking check method to the blocking read/write.
+  - 1.2.0 - Code cleanup, added const.
+  - 1.1.0 - Added timed wait_until to blocking read/write.
 
 ## Requirements
   - GCC

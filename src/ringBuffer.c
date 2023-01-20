@@ -9,10 +9,10 @@
   * @author  Jay Convertino(electrobs@gmail.com)
   * @date    12/01/2016
   * @version
-  * 1.4 - Fix for read started before write and write ends blocking in one pass.
-  * 1.3 - Added private blocking check method to the blocking read/write.
-  * 1.2 - Code cleanup, added const.
-  * 1.1 - Added timed wait_until to blocking read/write.
+  * 1.4.0 - Fix for read started before write and write ends blocking in one pass.
+  * 1.3.0 - Added private blocking check method to the blocking read/write.
+  * 1.2.0 - Code cleanup, added const.
+  * 1.1.0 - Added timed wait_until to blocking read/write.
   * 
   * @license mit
   * 
