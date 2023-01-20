@@ -389,8 +389,6 @@ unsigned int ringBufferRead(struct s_ringBuffer * const iop_ringBuffer, void *op
     return 0;
   }
 
-  printf("READING\n");
-  
   if(len <= 0) return totalRead;
 
   pthread_mutex_lock(&iop_ringBuffer->rwMutex);
@@ -638,7 +636,6 @@ unsigned int checkContinueBlocking(struct s_ringBuffer * const iop_ringBuffer, s
      */
     if(pthread_cond_wait(&iop_ringBuffer->condition, &iop_ringBuffer->rwMutex))
     {
-      printf("RECV SIGNAL\n");
       pthread_cond_signal(&iop_ringBuffer->condition);
       return STOP_BLOCKING;
     }
@@ -646,11 +643,8 @@ unsigned int checkContinueBlocking(struct s_ringBuffer * const iop_ringBuffer, s
 
   if(!iop_ringBuffer->b_blocking)
   {
-    printf("STOP BLOCKING\n");
     pthread_mutex_unlock(&iop_ringBuffer->rwMutex);
     return STOP_BLOCKING;
   }
-  
-  printf("CONT_BLOCKING\n");
   return CONT_BLOCKING;
 }
