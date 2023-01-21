@@ -9,6 +9,9 @@
   * @author  Jay Convertino(electrobs@gmail.com)
   * @date    12/01/2016
   * @version
+  * 1.5.0 - Major fix for element bug. For some reason I didn't divide the return.
+  *         1.4.0 added a bug where len will be wrong if element size is not 1 for
+  *         its fix.
   * 1.4.0 - Fix for read started before write and write ends blocking in one pass.
   * 1.3.0 - Added private blocking check method to the blocking read/write.
   * 1.2.0 - Code cleanup, added const.
@@ -280,12 +283,12 @@ unsigned int ringBufferBlockingWrite(struct s_ringBuffer * const iop_ringBuffer,
       if(!checkContinueBlocking(iop_ringBuffer, p_timeToWait))
       {
         /* mirror read fix, could be an issue... needs testing */
-        if(!iop_ringBuffer->b_blocking) return ringBufferWrite(iop_ringBuffer, ip_buffer, len);
+        if(!iop_ringBuffer->b_blocking) return ringBufferWrite(iop_ringBuffer, ip_buffer, len / iop_ringBuffer->elementSize);
 
         /* mirror read fix, doesn't seem like it would do much for the write case */
         if(writeLen <= writeSize(iop_ringBuffer)) break;
         
-        return totalWrote;
+        return totalWrote / iop_ringBuffer->elementSize;
       }
     }
 
@@ -299,7 +302,7 @@ unsigned int ringBufferBlockingWrite(struct s_ringBuffer * const iop_ringBuffer,
   
   pthread_mutex_unlock(&iop_ringBuffer->rwMutex);
 
-  return totalWrote;
+  return totalWrote / iop_ringBuffer->elementSize;
 }
 
 /*  Read from the buffer, blocking method, will not return till it reads, times out, or blocking is disabled. */
@@ -334,12 +337,12 @@ unsigned int ringBufferBlockingRead(struct s_ringBuffer * const iop_ringBuffer, 
       if(!checkContinueBlocking(iop_ringBuffer, p_timeToWait))
       {
         /* fix if read is larger then write and block is turned off */
-        if(!iop_ringBuffer->b_blocking) return ringBufferRead(iop_ringBuffer,op_buffer, len);
+        if(!iop_ringBuffer->b_blocking) return ringBufferRead(iop_ringBuffer,op_buffer, len / iop_ringBuffer->elementSize);
 
         /* fix for conditions when a read/write maybe called out of order and exit early with enough data availible */
         if(readLen <= readSize(iop_ringBuffer)) break;
 
-        return totalRead;
+        return totalRead / iop_ringBuffer->elementSize;
       }
     }
     
@@ -353,7 +356,7 @@ unsigned int ringBufferBlockingRead(struct s_ringBuffer * const iop_ringBuffer, 
 
   pthread_mutex_unlock(&iop_ringBuffer->rwMutex);
   
-  return totalRead;
+  return totalRead / iop_ringBuffer->elementSize;
 }
 
 /*  non-blocking write */
@@ -380,7 +383,7 @@ unsigned int ringBufferWrite(struct s_ringBuffer * const iop_ringBuffer, void *i
   pthread_cond_signal(&iop_ringBuffer->condition);
   pthread_mutex_unlock(&iop_ringBuffer->rwMutex);
 
-  return totalWrote;
+  return totalWrote / iop_ringBuffer->elementSize;
 }
 
 /*  non-blocking read */
@@ -412,7 +415,7 @@ unsigned int ringBufferRead(struct s_ringBuffer * const iop_ringBuffer, void *op
   pthread_cond_signal(&iop_ringBuffer->condition);
   pthread_mutex_unlock(&iop_ringBuffer->rwMutex);
 
-  return totalRead;
+  return totalRead / iop_ringBuffer->elementSize;
 }
 
 /*  clear out data, and restart blocking on the ringbuffer */
