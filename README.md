@@ -28,10 +28,10 @@ license: MIT
   - pthread library
 
 ## Building with CMAKE
-### library only
   1. mkdir build
   2. cd build
   3. cmake ../
+
     - use -DBUILD_SHARED_LIBS=OFF option for static library.
     - use -DBUILD_SHARED_LIBS=ON option for shared library.
     - use -DBUILD_EXAMPLES=ON option for examples to be built as well.
