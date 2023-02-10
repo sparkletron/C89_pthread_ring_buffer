@@ -4,3 +4,4 @@ test/test
 test/*.txt
 obj/
 doxygen/
+build/
