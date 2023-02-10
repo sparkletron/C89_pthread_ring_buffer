@@ -10,6 +10,7 @@
   * @author  Jay Convertino(electrobs@gmail.com)
   * @date    12/01/2016
   * @version
+  * 1.5.1 - Added __cplusplus ifdef check to add extern C for cpp application builds.
   * 1.5.0 - Major fix for element bug. For some reason I didn't divide the return.
   *         1.4.0 added a bug where len will be wrong if element size is not 1 for
   *         its fix.
@@ -40,6 +41,10 @@
   * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
   * IN THE SOFTWARE.
   *****************************************************************************/
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #ifndef __RINGBUFFER_HD
 #define __RINGBUFFER_HD
@@ -380,4 +385,8 @@ void ringBufferReset(struct s_ringBuffer * const iop_ringBuffer);
   *************************************************/
 void ringBufferEndBlocking(struct s_ringBuffer * const iop_ringBuffer);
 
+#endif
+
+#ifdef __cplusplus
+}
 #endif
