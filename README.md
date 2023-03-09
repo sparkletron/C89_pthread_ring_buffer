@@ -1,19 +1,25 @@
 # Thread safe C89 ring buffer
 
-Software Library for creating thread safe C89 ring buffers.
+### Software Library for creating thread safe C89 ring buffers.
 
-author: Jay Convertino
+---
 
-date: 2016.12.01
+  author: Jay Convertino
 
-license: MIT
+  date: 2016.12.01
+
+  license: MIT
+
+---
 
 ## Release Versions
 ### Current
-  Tag: release_v1.5.2
-  - 1.5.2 - Changed size to long for unsigned for greater memory utilization.
+  Tag: release_v1.5.3
+
+  - 1.5.3 - Element size was being put into buffer size twice... buffers too big.
 
 ### Past
+  - 1.5.2 - Changed size to long for unsigned for greater memory utilization.
   - 1.5.1 - Added __cplusplus ifdef check to add extern C for cpp application builds.
   - 1.5.0 - Major fix for element bug. For some reason I didn't divide the return.
             1.4.0 added a bug where len will be wrong if element size is not 1 for

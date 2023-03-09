@@ -9,6 +9,7 @@
   * @author  Jay Convertino(electrobs@gmail.com)
   * @date    12/01/2016
   * @version
+  * 1.5.3 - Element size was being put into buffer size twice... buffers too big.
   * 1.5.2 - Changed size to long for unsigned for greater memory utilization.
   * 1.5.1 - Added __cplusplus ifdef check to add extern C for cpp application builds.
   * 1.5.0 - Major fix for element bug. For some reason I didn't divide the return.
