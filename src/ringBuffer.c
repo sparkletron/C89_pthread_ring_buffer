@@ -589,7 +589,7 @@ unsigned long int allocateBuffer(struct s_ringBuffer * const iop_ringBuffer, uns
   iop_ringBuffer->b_blocking = 1;
 
   /* realloc will allocate NULL buffers */
-  p_temp = realloc(iop_ringBuffer->p_buffer, iop_ringBuffer->buffSize * iop_ringBuffer->elementSize);
+  p_temp = realloc(iop_ringBuffer->p_buffer, iop_ringBuffer->buffSize);
   
   if(!p_temp)
   {
