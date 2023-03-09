@@ -9,6 +9,7 @@
   * @author  Jay Convertino(electrobs@gmail.com)
   * @date    12/01/2016
   * @version
+  * 1.5.4 - Cast pointer to char so the library isn't using GCC void * math.
   * 1.5.3 - Element size was being put into buffer size twice... buffers too big.
   * 1.5.2 - Changed size to long for unsigned for greater memory utilization.
   * 1.5.1 - Added __cplusplus ifdef check to add extern C for cpp application builds.
@@ -496,7 +497,7 @@ unsigned long int rawWrite(struct s_ringBuffer * const iop_ringBuffer, void *ip_
 
     writeLen = (len < availLen ? len : availLen);
 
-    memcpy(iop_ringBuffer->p_buffer + iop_ringBuffer->headIndex, ip_buffer + totalWrote, writeLen);
+    memcpy(((char *)iop_ringBuffer->p_buffer) + iop_ringBuffer->headIndex, ((char *)ip_buffer) + totalWrote, writeLen);
 
     len -= writeLen;
     totalWrote += writeLen;
@@ -523,7 +524,7 @@ unsigned long int rawRead(struct s_ringBuffer * const iop_ringBuffer, void *op_b
 
     readLen = (len < availLen ? len : availLen);
 
-    memcpy(op_buffer + totalRead, iop_ringBuffer->p_buffer + iop_ringBuffer->tailIndex, readLen);
+    memcpy(((char *)op_buffer) + totalRead, ((char *)iop_ringBuffer->p_buffer) + iop_ringBuffer->tailIndex, readLen);
 
     len -= readLen;
     totalRead += readLen;
