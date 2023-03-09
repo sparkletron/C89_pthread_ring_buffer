@@ -9,6 +9,7 @@
   * @author  Jay Convertino(electrobs@gmail.com)
   * @date    12/01/2016
   * @version
+  * 1.5.2 - Changed size to long for unsigned for greater memory utilization.
   * 1.5.1 - Added __cplusplus ifdef check to add extern C for cpp application builds.
   * 1.5.0 - Major fix for element bug. For some reason I didn't divide the return.
   *         1.4.0 added a bug where len will be wrong if element size is not 1 for
@@ -54,21 +55,21 @@
 
 /*  private helper functions */
 /*  write size of the ring buffer, no thread protection */
-unsigned int writeSize(struct s_ringBuffer const * const ip_ringBuffer);
+unsigned long int writeSize(struct s_ringBuffer const * const ip_ringBuffer);
 /*  read size of the ring buffer, no thread protection */
-unsigned int readSize(struct s_ringBuffer const * const ip_ringBuffer);
+unsigned long int readSize(struct s_ringBuffer const * const ip_ringBuffer);
 /*  raw write to the ring buffer. No thread protection. */
-unsigned int rawWrite(struct s_ringBuffer * const iop_ringBuffer, void *ip_buffer, unsigned int len);
+unsigned long int rawWrite(struct s_ringBuffer * const iop_ringBuffer, void *ip_buffer, unsigned long int len);
 /*  raw read to from the ring buffer. No thread protection. */
-unsigned int rawRead(struct s_ringBuffer * const iop_ringBuffer, void *op_buffer, unsigned int len);
+unsigned long int rawRead(struct s_ringBuffer * const iop_ringBuffer, void *op_buffer, unsigned long int len);
 /*  General allocate method for the buffer. Used in the init and resize methods. */
-unsigned int allocateBuffer(struct s_ringBuffer * const iop_ringBuffer, unsigned int buffSize, unsigned int elementSize);
+unsigned long int allocateBuffer(struct s_ringBuffer * const iop_ringBuffer, unsigned long int buffSize, unsigned long int elementSize);
 /*  check the state of blocking, have we timed out? Did we error out? */
-unsigned int checkContinueBlocking(struct s_ringBuffer * const iop_ringBuffer, struct timespec *p_timeToWait);
+unsigned long int checkContinueBlocking(struct s_ringBuffer * const iop_ringBuffer, struct timespec *p_timeToWait);
 
 /*  public  functions */
 /*  init, calls allocate buffer to setup the size. */
-struct s_ringBuffer *initRingBuffer(unsigned int const buffSize, unsigned int const elementSize)
+struct s_ringBuffer *initRingBuffer(unsigned long int const buffSize, unsigned long int const elementSize)
 {
   struct s_ringBuffer *p_tempBuffer = NULL;
 
@@ -103,7 +104,7 @@ void freeRingBuffer(struct s_ringBuffer **iopp_ringBuffer)
 }
 
 /*  simple true false, are we empty. read size 0 equals 0, we are empty. */
-unsigned int ringBufferIsEmpty(struct s_ringBuffer * const ip_ringBuffer)
+unsigned long int ringBufferIsEmpty(struct s_ringBuffer * const ip_ringBuffer)
 {
   if(!ip_ringBuffer) return ERROR_NULL;
   
@@ -111,7 +112,7 @@ unsigned int ringBufferIsEmpty(struct s_ringBuffer * const ip_ringBuffer)
 }
 
 /*simple true false are we full. write size 0 equals 0, we are full. */
-unsigned int ringBufferIsFull(struct s_ringBuffer * const ip_ringBuffer)
+unsigned long int ringBufferIsFull(struct s_ringBuffer * const ip_ringBuffer)
 {
   if(!ip_ringBuffer) return ERROR_NULL;
   
@@ -119,9 +120,9 @@ unsigned int ringBufferIsFull(struct s_ringBuffer * const ip_ringBuffer)
 }
 
 /*  Simple true false are we blocking. bool is 1 and equals 1, we are blocking (true). */
-unsigned int ringBufferStillBlocking(struct s_ringBuffer * const ip_ringBuffer)
+unsigned long int ringBufferStillBlocking(struct s_ringBuffer * const ip_ringBuffer)
 {
-  unsigned int boolResult = 0;
+  unsigned long int boolResult = 0;
   
   if(!ip_ringBuffer) return ERROR_NULL;
   
@@ -135,9 +136,9 @@ unsigned int ringBufferStillBlocking(struct s_ringBuffer * const ip_ringBuffer)
 }
 
 /*  What is the write size in elements? */
-unsigned int getRingBufferWriteSize(struct s_ringBuffer * const ip_ringBuffer)
+unsigned long int getRingBufferWriteSize(struct s_ringBuffer * const ip_ringBuffer)
 {
-  unsigned int tempSize = 0;
+  unsigned long int tempSize = 0;
   
   if(!ip_ringBuffer) return ERROR_NULL;
 
@@ -151,9 +152,9 @@ unsigned int getRingBufferWriteSize(struct s_ringBuffer * const ip_ringBuffer)
 }
 
 /*  What is the write size in bytes? */
-unsigned int getRingBufferWriteByteSize(struct s_ringBuffer * const ip_ringBuffer)
+unsigned long int getRingBufferWriteByteSize(struct s_ringBuffer * const ip_ringBuffer)
 {
-  unsigned int tempSize = 0;
+  unsigned long int tempSize = 0;
   
   if(!ip_ringBuffer) return ERROR_NULL;
 
@@ -167,9 +168,9 @@ unsigned int getRingBufferWriteByteSize(struct s_ringBuffer * const ip_ringBuffe
 }
 
 /*  What is the read size in elements? */
-unsigned int getRingBufferReadSize(struct s_ringBuffer * const ip_ringBuffer)
+unsigned long int getRingBufferReadSize(struct s_ringBuffer * const ip_ringBuffer)
 {
-  unsigned int tempSize = 0;
+  unsigned long int tempSize = 0;
   
   if(!ip_ringBuffer) return ERROR_NULL;
 
@@ -183,9 +184,9 @@ unsigned int getRingBufferReadSize(struct s_ringBuffer * const ip_ringBuffer)
 }
 
 /*  What is the read size in bytes? */
-unsigned int getRingBufferReadByteSize(struct s_ringBuffer * const ip_ringBuffer)
+unsigned long int getRingBufferReadByteSize(struct s_ringBuffer * const ip_ringBuffer)
 {
-  unsigned int tempSize = 0;
+  unsigned long int tempSize = 0;
   
   if(!ip_ringBuffer) return ERROR_NULL;
 
@@ -199,7 +200,7 @@ unsigned int getRingBufferReadByteSize(struct s_ringBuffer * const ip_ringBuffer
 }
 
 /*  What is the size of the elements? */
-unsigned int getRingBufferElementSize(struct s_ringBuffer const * const ip_ringBuffer)
+unsigned long int getRingBufferElementSize(struct s_ringBuffer const * const ip_ringBuffer)
 {
   if(!ip_ringBuffer) return ERROR_NULL;
   
@@ -207,7 +208,7 @@ unsigned int getRingBufferElementSize(struct s_ringBuffer const * const ip_ringB
 }
 
 /*  What is the size of the buffer in bytes? */
-unsigned int getRingBufferByteSize(struct s_ringBuffer const * const ip_ringBuffer)
+unsigned long int getRingBufferByteSize(struct s_ringBuffer const * const ip_ringBuffer)
 {
   if(!ip_ringBuffer) return ERROR_NULL;
   
@@ -215,7 +216,7 @@ unsigned int getRingBufferByteSize(struct s_ringBuffer const * const ip_ringBuff
 }
 
 /*  What is the size of the buffer in elements. */
-unsigned int getRingBufferSize(struct s_ringBuffer const * const ip_ringBuffer)
+unsigned long int getRingBufferSize(struct s_ringBuffer const * const ip_ringBuffer)
 {
   if(!ip_ringBuffer) return ERROR_NULL;
   
@@ -223,7 +224,7 @@ unsigned int getRingBufferSize(struct s_ringBuffer const * const ip_ringBuffer)
 }
 
 /*  Resize the buffer to a new size. */
-unsigned int ringBufferResize(struct s_ringBuffer * const io_ringBuffer, unsigned int bufferSize, unsigned int elementSize)
+unsigned long int ringBufferResize(struct s_ringBuffer * const io_ringBuffer, unsigned long int bufferSize, unsigned long int elementSize)
 {
   if(!io_ringBuffer) return ERROR_NULL;
   
@@ -253,11 +254,11 @@ unsigned int ringBufferResize(struct s_ringBuffer * const io_ringBuffer, unsigne
 }
 
 /*  Write to the buffer, blocking method, will not return till it writes, times out, or blocking is disabled. */
-unsigned int ringBufferBlockingWrite(struct s_ringBuffer * const iop_ringBuffer, void *ip_buffer, unsigned int len, struct timespec * p_timeToWait)
+unsigned long int ringBufferBlockingWrite(struct s_ringBuffer * const iop_ringBuffer, void *ip_buffer, unsigned long int len, struct timespec * p_timeToWait)
 {
-  unsigned int totalWrote = 0;
-  unsigned int wrote = 0;
-  unsigned int writeLen = 0;
+  unsigned long int totalWrote = 0;
+  unsigned long int wrote = 0;
+  unsigned long int writeLen = 0;
   
   if(!iop_ringBuffer) return 0;
   
@@ -307,11 +308,11 @@ unsigned int ringBufferBlockingWrite(struct s_ringBuffer * const iop_ringBuffer,
 }
 
 /*  Read from the buffer, blocking method, will not return till it reads, times out, or blocking is disabled. */
-unsigned int ringBufferBlockingRead(struct s_ringBuffer * const iop_ringBuffer, void *op_buffer, unsigned int len, struct timespec *p_timeToWait)
+unsigned long int ringBufferBlockingRead(struct s_ringBuffer * const iop_ringBuffer, void *op_buffer, unsigned long int len, struct timespec *p_timeToWait)
 {
-  unsigned int totalRead = 0;
-  unsigned int read = 0;
-  unsigned int readLen = 0;
+  unsigned long int totalRead = 0;
+  unsigned long int read = 0;
+  unsigned long int readLen = 0;
   
   if(!iop_ringBuffer) return 0;
 
@@ -361,9 +362,9 @@ unsigned int ringBufferBlockingRead(struct s_ringBuffer * const iop_ringBuffer, 
 }
 
 /*  non-blocking write */
-unsigned int ringBufferWrite(struct s_ringBuffer * const iop_ringBuffer, void *ip_buffer, unsigned int len)
+unsigned long int ringBufferWrite(struct s_ringBuffer * const iop_ringBuffer, void *ip_buffer, unsigned long int len)
 {
-  unsigned int totalWrote = 0;
+  unsigned long int totalWrote = 0;
   
   if(!iop_ringBuffer) return 0;
 
@@ -388,9 +389,9 @@ unsigned int ringBufferWrite(struct s_ringBuffer * const iop_ringBuffer, void *i
 }
 
 /*  non-blocking read */
-unsigned int ringBufferRead(struct s_ringBuffer * const iop_ringBuffer, void *op_buffer, unsigned int len)
+unsigned long int ringBufferRead(struct s_ringBuffer * const iop_ringBuffer, void *op_buffer, unsigned long int len)
 {
-  unsigned int totalRead = 0;
+  unsigned long int totalRead = 0;
   
   if(!iop_ringBuffer) return 0;
 
@@ -449,9 +450,9 @@ void ringBufferEndBlocking(struct s_ringBuffer * const iop_ringBuffer)
 
 /*  help function implimentation */
 /*  return the write size of the buffer, no thread protection. */
-unsigned int writeSize(struct s_ringBuffer const * const ip_ringBuffer)
+unsigned long int writeSize(struct s_ringBuffer const * const ip_ringBuffer)
 {
-  unsigned int writeSize = 0;
+  unsigned long int writeSize = 0;
   
   /* using binary methods to roll the number back around if it is negative. */
   /** 
@@ -472,7 +473,7 @@ unsigned int writeSize(struct s_ringBuffer const * const ip_ringBuffer)
 }
 
 /*  return the read size of the buffer, no thread protection. */
-unsigned int readSize(struct s_ringBuffer const * const ip_ringBuffer)
+unsigned long int readSize(struct s_ringBuffer const * const ip_ringBuffer)
 {
   /* we are using binary methods to roll the number back around if it is negative. see write for how this actually works*/
   return (ip_ringBuffer->headIndex - ip_ringBuffer->tailIndex) & ip_ringBuffer->indexMask;
@@ -480,11 +481,11 @@ unsigned int readSize(struct s_ringBuffer const * const ip_ringBuffer)
 
 
 /*  Write data to the buffer. */
-unsigned int rawWrite(struct s_ringBuffer * const iop_ringBuffer, void *ip_buffer, unsigned int len)
+unsigned long int rawWrite(struct s_ringBuffer * const iop_ringBuffer, void *ip_buffer, unsigned long int len)
 {
-  unsigned int totalWrote = 0;
-  unsigned int availLen = 0;
-  unsigned int writeLen = 0;
+  unsigned long int totalWrote = 0;
+  unsigned long int availLen = 0;
+  unsigned long int writeLen = 0;
   
   if(!iop_ringBuffer) return 0;
 
@@ -507,11 +508,11 @@ unsigned int rawWrite(struct s_ringBuffer * const iop_ringBuffer, void *ip_buffe
 }
 
 /* Read data from the buffer. */
-unsigned int rawRead(struct s_ringBuffer * const iop_ringBuffer, void *op_buffer, unsigned int len)
+unsigned long int rawRead(struct s_ringBuffer * const iop_ringBuffer, void *op_buffer, unsigned long int len)
 {
-  unsigned int totalRead = 0;
-  unsigned int availLen = 0;
-  unsigned int readLen = 0;
+  unsigned long int totalRead = 0;
+  unsigned long int availLen = 0;
+  unsigned long int readLen = 0;
   
   if(!iop_ringBuffer) return 0;
 
@@ -534,17 +535,17 @@ unsigned int rawRead(struct s_ringBuffer * const iop_ringBuffer, void *op_buffer
 }
 
 /*  allocate the buffer, will also preform reallocations if it is already allocated. */
-unsigned int allocateBuffer(struct s_ringBuffer * const iop_ringBuffer, unsigned int buffSize, unsigned int elementSize)
+unsigned long int allocateBuffer(struct s_ringBuffer * const iop_ringBuffer, unsigned long int buffSize, unsigned long int elementSize)
 {
-  unsigned int maxBuffSize = 0;
-  unsigned int back_buffersize = 0;
-  unsigned int back_elementSize = 0;
+  unsigned long int maxBuffSize = 0;
+  unsigned long int back_buffersize = 0;
+  unsigned long int back_elementSize = 0;
   
   struct s_ringBuffer backupBuffer;
   void *p_temp = NULL;
   
   /* The buffer can't be any larger then 0111111... since 1000... is are mask to loop the buffer around. */
-  maxBuffSize = (unsigned int)~0 >> 1;
+  maxBuffSize = (unsigned long int)~0 >> 1;
   
   if(!iop_ringBuffer)
   {
@@ -566,7 +567,7 @@ unsigned int allocateBuffer(struct s_ringBuffer * const iop_ringBuffer, unsigned
   
   if((buffSize * elementSize) > maxBuffSize)
   {
-    fprintf(stderr, "ANSI-C RING BUFFER: Size is too large, must be equal to or less then %d.\n", maxBuffSize);
+    fprintf(stderr, "ANSI-C RING BUFFER: Size is too large, must be equal to or less then %lu.\n", maxBuffSize);
     return PROC_FAIL;
   }
   
@@ -611,7 +612,7 @@ unsigned int allocateBuffer(struct s_ringBuffer * const iop_ringBuffer, unsigned
 }
 
 /* deal with the blocking check in the function. The method is the same for read and write. */
-unsigned int checkContinueBlocking(struct s_ringBuffer * const iop_ringBuffer, struct timespec *p_timeToWait)
+unsigned long int checkContinueBlocking(struct s_ringBuffer * const iop_ringBuffer, struct timespec *p_timeToWait)
 {
   if(!iop_ringBuffer) return STOP_BLOCKING;
   

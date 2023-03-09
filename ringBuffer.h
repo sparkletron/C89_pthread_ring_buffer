@@ -10,6 +10,7 @@
   * @author  Jay Convertino(electrobs@gmail.com)
   * @date    12/01/2016
   * @version
+  * 1.5.2 - Changed size to long for unsigned for greater memory utilization.
   * 1.5.1 - Added __cplusplus ifdef check to add extern C for cpp application builds.
   * 1.5.0 - Major fix for element bug. For some reason I didn't divide the return.
   *         1.4.0 added a bug where len will be wrong if element size is not 1 for
@@ -42,15 +43,15 @@
   * IN THE SOFTWARE.
   *****************************************************************************/
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #ifndef __RINGBUFFER_HD
 #define __RINGBUFFER_HD
 
 #include <pthread.h>
 #include <sys/time.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /**
  * @def ERROR_NULL
@@ -68,32 +69,32 @@ struct s_ringBuffer
   * @var s_ringBuffer::buffSize
   * Size of the whole ring buffer
   */
-  volatile unsigned int buffSize;
+  volatile unsigned long int buffSize;
   /**
   * @var s_ringBuffer::elementSize
   * size of the element the ring buffer stores.
   */
-  volatile unsigned int elementSize;
+  volatile unsigned long int elementSize;
   /**
   * @var s_ringBuffer::indexMask
   * mask off overflow bits to index into the array properly.
   */
-  volatile unsigned int indexMask;
+  volatile unsigned long int indexMask;
   /**
   * @var s_ringBuffer::b_blocking
   * Boolean for blocking state, true is blocking enabled. 
   */
-  volatile unsigned int b_blocking;
+  volatile unsigned long int b_blocking;
   /**
   * @var s_ringBuffer::headIndex
   * head index
   */
-  volatile unsigned int headIndex;
+  volatile unsigned long int headIndex;
   /**
   * @var s_ringBuffer::tailIndex
   * tail index
   */
-  volatile unsigned int tailIndex;
+  volatile unsigned long int tailIndex;
 
   /**
   * @var s_ringBuffer::rwMutex
@@ -129,7 +130,7 @@ struct s_ringBuffer
   * @return  Initialized ring buffer object, or NULL
   * on error.
   *************************************************/
-struct s_ringBuffer *initRingBuffer(unsigned int const buffSize, unsigned int const elementSize);
+struct s_ringBuffer *initRingBuffer(unsigned long int const buffSize, unsigned long int const elementSize);
 /*********************************************//**
   * @brief Destroys ring buffer object.
   * 
@@ -151,7 +152,7 @@ void freeRingBuffer(struct s_ringBuffer **iopp_ringBuffer);
   * 
   * @return Is the ring buffer empty.
   *************************************************/
-unsigned int ringBufferIsEmpty(struct s_ringBuffer * const ip_ringBuffer);
+unsigned long int ringBufferIsEmpty(struct s_ringBuffer * const ip_ringBuffer);
 /*********************************************//**
   * @brief Full Test,
   * is the buffer full?
@@ -164,7 +165,7 @@ unsigned int ringBufferIsEmpty(struct s_ringBuffer * const ip_ringBuffer);
   *
   * @return Is the ring buffer full.
   *************************************************/
-unsigned int ringBufferIsFull(struct s_ringBuffer * const ip_ringBuffer);
+unsigned long int ringBufferIsFull(struct s_ringBuffer * const ip_ringBuffer);
 /********************************************//**
   * @brief Check End Blocking Flag,
   * have the blocking r/w methods been disabled?
@@ -178,7 +179,7 @@ unsigned int ringBufferIsFull(struct s_ringBuffer * const ip_ringBuffer);
   *
   * @return Has blocking functions been disabled.
   ************************************************/
-unsigned int ringBufferStillBlocking(struct s_ringBuffer * const ip_ringBuffer);
+unsigned long int ringBufferStillBlocking(struct s_ringBuffer * const ip_ringBuffer);
 /*********************************************//**
   * @brief Get Write Size,
   * the amount of available elements to write.
@@ -191,7 +192,7 @@ unsigned int ringBufferStillBlocking(struct s_ringBuffer * const ip_ringBuffer);
   *
   * @return The number of elements that can be written.
   *************************************************/
-unsigned int getRingBufferWriteSize(struct s_ringBuffer * const ip_ringBuffer);
+unsigned long int getRingBufferWriteSize(struct s_ringBuffer * const ip_ringBuffer);
 /*********************************************//**
   * @brief Get Write Size,
   * the amount of available bytes to write.
@@ -204,7 +205,7 @@ unsigned int getRingBufferWriteSize(struct s_ringBuffer * const ip_ringBuffer);
   *
   * @return The number of elements that can be written.
   *************************************************/
-unsigned int getRingBufferWriteByteSize(struct s_ringBuffer * const ip_ringBuffer);
+unsigned long int getRingBufferWriteByteSize(struct s_ringBuffer * const ip_ringBuffer);
 /*********************************************//**
   * @brief Get Read Size,
   * the amount of available elements to read.
@@ -217,7 +218,7 @@ unsigned int getRingBufferWriteByteSize(struct s_ringBuffer * const ip_ringBuffe
   * 
   * @return The number of elements that can be read.
   *************************************************/
-unsigned int getRingBufferReadSize(struct s_ringBuffer * const ip_ringBuffer);
+unsigned long int getRingBufferReadSize(struct s_ringBuffer * const ip_ringBuffer);
 /*********************************************//**
   * @brief Get Read Size,
   * the amount of available bytes to read.
@@ -230,7 +231,7 @@ unsigned int getRingBufferReadSize(struct s_ringBuffer * const ip_ringBuffer);
   * 
   * @return The number of elements that can be read.
   *************************************************/
-unsigned int getRingBufferReadByteSize(struct s_ringBuffer * const ip_ringBuffer);
+unsigned long int getRingBufferReadByteSize(struct s_ringBuffer * const ip_ringBuffer);
 /*********************************************//**
   * @brief Get buffer element size in bytes.
   *
@@ -241,7 +242,7 @@ unsigned int getRingBufferReadByteSize(struct s_ringBuffer * const ip_ringBuffer
   *
   * @return The size of the element in bytes.
   *************************************************/
-unsigned int getRingBufferElementSize(struct s_ringBuffer const * const ip_ringBuffer);
+unsigned long int getRingBufferElementSize(struct s_ringBuffer const * const ip_ringBuffer);
 /*********************************************//**
   * @brief Get Buffer Size, in bytes.
   *
@@ -252,7 +253,7 @@ unsigned int getRingBufferElementSize(struct s_ringBuffer const * const ip_ringB
   *
   * @return The total size of the buffer in bytes.
   *************************************************/
-unsigned int getRingBufferByteSize(struct s_ringBuffer const * const ip_ringBuffer);
+unsigned long int getRingBufferByteSize(struct s_ringBuffer const * const ip_ringBuffer);
 /*********************************************//**
   * @brief Get Buffer Size,
   * the capacity in elements of the buffer.
@@ -264,7 +265,7 @@ unsigned int getRingBufferByteSize(struct s_ringBuffer const * const ip_ringBuff
   *
   * @return The total size of the buffer.
   *************************************************/
-unsigned int getRingBufferSize(struct s_ringBuffer const * const ip_ringBuffer);
+unsigned long int getRingBufferSize(struct s_ringBuffer const * const ip_ringBuffer);
 /*********************************************//**
   * @brief Resize Buffer,
   * to fit a new capcity, or we run out of space.
@@ -278,7 +279,7 @@ unsigned int getRingBufferSize(struct s_ringBuffer const * const ip_ringBuffer);
   * 
   * @return The total size of the buffer.
   *************************************************/
-unsigned int ringBufferResize(struct s_ringBuffer * const iop_ringBuffer, unsigned int bufferSize, unsigned int elementSize);
+unsigned long int ringBufferResize(struct s_ringBuffer * const iop_ringBuffer, unsigned long int bufferSize, unsigned long int elementSize);
 /*********************************************//**
   * @brief Blocking Write,
   * write all data without destroying data in buffer.
@@ -300,7 +301,7 @@ unsigned int ringBufferResize(struct s_ringBuffer * const iop_ringBuffer, unsign
   * if blocking for too long.
   * @return The number of elements written.
   *************************************************/
-unsigned int ringBufferBlockingWrite(struct s_ringBuffer * const iop_ringBuffer, void *ip_buffer, unsigned int len, struct timespec *p_timeToWait);
+unsigned long int ringBufferBlockingWrite(struct s_ringBuffer * const iop_ringBuffer, void *ip_buffer, unsigned long int len, struct timespec *p_timeToWait);
 /*********************************************//**
   * @brief Blocking Read,
   * read all data in buffer, wait till amount requested
@@ -322,7 +323,7 @@ unsigned int ringBufferBlockingWrite(struct s_ringBuffer * const iop_ringBuffer,
   * if blocking for too long.
   * @return The number of elements read.
   *************************************************/
-unsigned int ringBufferBlockingRead(struct s_ringBuffer * const iop_ringBuffer, void *op_buffer, unsigned int len, struct timespec *p_timeToWait);
+unsigned long int ringBufferBlockingRead(struct s_ringBuffer * const iop_ringBuffer, void *op_buffer, unsigned long int len, struct timespec *p_timeToWait);
 /*********************************************//**
   * @brief Write to the buffer,
   * write all data regardless if it destroys data in buffer.
@@ -342,7 +343,7 @@ unsigned int ringBufferBlockingRead(struct s_ringBuffer * const iop_ringBuffer, 
   * @param len the length of the input buffer in elements.
   * @return The number of elements written.
   *************************************************/
-unsigned int ringBufferWrite(struct s_ringBuffer * const iop_ringBuffer, void *ip_buffer, unsigned int len);
+unsigned long int ringBufferWrite(struct s_ringBuffer * const iop_ringBuffer, void *ip_buffer, unsigned long int len);
 /*********************************************//**
   * @brief Read from the buffer,
   * read data available, up to length request.
@@ -359,7 +360,7 @@ unsigned int ringBufferWrite(struct s_ringBuffer * const iop_ringBuffer, void *i
   * @param len the number of elements to be read.
   * @return The number of elements read.
   *************************************************/
-unsigned int ringBufferRead(struct s_ringBuffer * const iop_ringBuffer, void *op_buffer, unsigned int len);
+unsigned long int ringBufferRead(struct s_ringBuffer * const iop_ringBuffer, void *op_buffer, unsigned long int len);
 /*********************************************//**
   * @brief Reset Buffer,
   * reset buffer indexs and end blocking.

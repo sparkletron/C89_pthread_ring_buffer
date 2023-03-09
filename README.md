@@ -10,11 +10,11 @@ license: MIT
 
 ## Release Versions
 ### Current
-  Tag: release_v1.5.1
-
-  - 1.5.1 - Added __cplusplus ifdef check to add extern C for cpp application builds.
+  Tag: release_v1.5.2
+  - 1.5.2 - Changed size to long for unsigned for greater memory utilization.
 
 ### Past
+  - 1.5.1 - Added __cplusplus ifdef check to add extern C for cpp application builds.
   - 1.5.0 - Major fix for element bug. For some reason I didn't divide the return.
             1.4.0 added a bug where len will be wrong if element size is not 1 for
             its fix.
@@ -22,6 +22,9 @@ license: MIT
   - 1.3.0 - Added private blocking check method to the blocking read/write.
   - 1.2.0 - Code cleanup, added const.
   - 1.1.0 - Added timed wait_until to blocking read/write.
+
+## BUGS
+  - There is a segfault bug when the size is too large (unsigned long should have no issue v1.5.2), need to convert back to unsigned, (v1.5.1) and test test test till its found.
 
 ## Requirements
   - GCC
@@ -35,6 +38,7 @@ license: MIT
     - use -DBUILD_SHARED_LIBS=OFF option for static library.
     - use -DBUILD_SHARED_LIBS=ON option for shared library.
     - use -DBUILD_EXAMPLES=ON option for examples to be built as well.
+
   4. make
 
 ## Building with Makefile (OLD)
