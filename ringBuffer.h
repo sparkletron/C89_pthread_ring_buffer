@@ -10,6 +10,7 @@
   * @author  Jay Convertino(electrobs@gmail.com)
   * @date    12/01/2016
   * @version
+  * - 1.6.0 - Added new method for checking if the buffer is alive to help with mutex locks being abused.
   * 1.5.4 - Cast pointer to char so the library isn't using GCC void * math.
   * 1.5.3 - Element size was being put into buffer size twice... buffers too big.
   * 1.5.2 - Changed size to long for unsigned for greater memory utilization.
@@ -173,8 +174,8 @@ unsigned long int ringBufferIsFull(struct s_ringBuffer * const ip_ringBuffer);
   * have the blocking r/w methods been disabled?
   *
   * Return the flag that tells us if blocking is
-  * still allowed. True no more blocking, false
-  * the blockingRead/Write will work normally.
+  * still allowed. True we are blocking, false
+  * the blocking is disabled.
   * 
   * @param ip_ringBuffer is the ring buffer object
   * to operate on.
@@ -182,6 +183,20 @@ unsigned long int ringBufferIsFull(struct s_ringBuffer * const ip_ringBuffer);
   * @return Has blocking functions been disabled.
   ************************************************/
 unsigned long int ringBufferStillBlocking(struct s_ringBuffer * const ip_ringBuffer);
+/********************************************//**
+  * @brief Check if End Blocking flag is set and,
+  * there are any bytes in the buffer.
+  *
+  * Return the flag that tells us if blocking is
+  * still allowed and there are bytes. True no
+  * more blocking, and no more bytes left.
+  *
+  * @param ip_ringBuffer is the ring buffer object
+  * to operate on.
+  *
+  * @return True if blocking or data bytes exist.
+  ************************************************/
+unsigned long int ringBufferIsAlive(struct s_ringBuffer * const ip_ringBuffer);
 /*********************************************//**
   * @brief Get Write Size,
   * the amount of available elements to write.

@@ -14,11 +14,11 @@
 
 ## Release Versions
 ### Current
-  Tag: release_v1.5.4
-
-  - 1.5.4 - Cast pointer to char so the library isn't using GCC void * math.
+  Tag: release_v1.6.0
+  - 1.6.0 - Added new method for checking if the buffer is alive to help with mutex locks being abused.
 
 ### Past
+  - 1.5.4 - Cast pointer to char so the library isn't using GCC void * math.
   - 1.5.3 - Element size was being put into buffer size twice... buffers too big.
   - 1.5.2 - Changed size to long for unsigned for greater memory utilization.
   - 1.5.1 - Added __cplusplus ifdef check to add extern C for cpp application builds.
@@ -29,9 +29,6 @@
   - 1.3.0 - Added private blocking check method to the blocking read/write.
   - 1.2.0 - Code cleanup, added const.
   - 1.1.0 - Added timed wait_until to blocking read/write.
-
-## BUGS
-  - There is a segfault bug when the size is too large (unsigned long should have no issue v1.5.2), need to convert back to unsigned, (v1.5.1) and test test test till its found.
 
 ## Requirements
   - GCC

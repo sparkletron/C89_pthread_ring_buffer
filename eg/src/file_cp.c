@@ -9,7 +9,10 @@
 
 #include "ringBuffer.h"
 
-#define DATACHUNK (1 << 21)
+/* 8 MB */
+#define BUFFSIZE  (1 << 23)
+/* 1 MB */
+#define DATACHUNK (1 << 20)
 
 struct s_ringBuffer *p_ringBuffer = NULL;
 
@@ -68,7 +71,7 @@ int main(int argc, char *argv[])
   printf("CREATING RING BUFFER\n");
 #endif
   
-  p_ringBuffer = initRingBuffer(DATACHUNK, 1);
+  p_ringBuffer = initRingBuffer(BUFFSIZE, 1);
   
   if(!p_ringBuffer)
   {
@@ -178,7 +181,7 @@ void *producer(void *data)
       numElemWrote += ringBufferBlockingWrite(p_ringBuffer, p_fileBuffer + numElemWrote, numElemRead - numElemWrote, NULL);
     } while(numElemWrote < numElemRead);
     
-  } while(!feof(p_inFile) && ringBufferStillBlocking(p_ringBuffer));
+  } while(!feof(p_inFile));
   
   ringBufferEndBlocking(p_ringBuffer);
   
@@ -221,7 +224,7 @@ void *consumer(void *data)
       numElemWrote += fwrite(p_fileBuffer + numElemWrote, sizeof(*p_fileBuffer), numElemRead - numElemWrote, p_outFile);
     } while(numElemRead < numElemWrote);
 
-  } while(ringBufferStillBlocking(p_ringBuffer) || getRingBufferReadByteSize(p_ringBuffer));
+  } while(ringBufferIsAlive(p_ringBuffer));
   
   free(p_fileBuffer);
   

@@ -9,6 +9,7 @@
   * @author  Jay Convertino(electrobs@gmail.com)
   * @date    12/01/2016
   * @version
+  * - 1.6.0 - Added new method for checking if the buffer is alive to help with mutex locks being abused.
   * 1.5.4 - Cast pointer to char so the library isn't using GCC void * math.
   * 1.5.3 - Element size was being put into buffer size twice... buffers too big.
   * 1.5.2 - Changed size to long for unsigned for greater memory utilization.
@@ -134,6 +135,22 @@ unsigned long int ringBufferStillBlocking(struct s_ringBuffer * const ip_ringBuf
   
   pthread_mutex_unlock(&ip_ringBuffer->rwMutex);
   
+  return boolResult;
+}
+
+/* Are we still blocking or do we still have bytes? Either case should keep reading. */
+unsigned long int ringBufferIsAlive(struct s_ringBuffer * const ip_ringBuffer)
+{
+  unsigned long int boolResult = 0;
+
+  if(!ip_ringBuffer) return ERROR_NULL;
+
+  pthread_mutex_lock(&ip_ringBuffer->rwMutex);
+
+  boolResult = (ip_ringBuffer->b_blocking == 1) || (readSize(ip_ringBuffer) > 0);
+
+  pthread_mutex_unlock(&ip_ringBuffer->rwMutex);
+
   return boolResult;
 }
 
