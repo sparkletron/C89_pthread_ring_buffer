@@ -192,6 +192,8 @@ void *producer(void *data)
 
 void *consumer(void *data)
 {
+  int numElemRead = 0;
+
   char *p_fileBuffer = NULL;
   
   FILE *p_outFile = NULL;
@@ -214,7 +216,6 @@ void *consumer(void *data)
   
   do
   {
-    int numElemRead = 0;
     int numElemWrote = 0;
     
     numElemRead = ringBufferBlockingRead(p_ringBuffer, p_fileBuffer, DATACHUNK, NULL);
@@ -224,7 +225,7 @@ void *consumer(void *data)
       numElemWrote += fwrite(p_fileBuffer + numElemWrote, sizeof(*p_fileBuffer), numElemRead - numElemWrote, p_outFile);
     } while(numElemRead < numElemWrote);
 
-  } while(ringBufferIsAlive(p_ringBuffer));
+  } while(numElemRead == DATACHUNK);
   
   free(p_fileBuffer);
   
