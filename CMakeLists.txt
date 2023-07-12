@@ -36,7 +36,7 @@ if(BUILD_EXAMPLES)
   foreach(app_source ${EXAMPLE_SOURCES})
       get_filename_component(app_name ${app_source} NAME_WLE)
       add_executable(${app_name} ${app_source})
-      target_link_libraries(${app_name} ${LIB_NAME})
+      target_link_libraries(${app_name} ${LIB_NAME} Threads::Threads)
   endforeach(app_source ${EXAMPLE_SOURCES})
 
 endif()
