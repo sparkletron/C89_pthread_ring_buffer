@@ -6,7 +6,7 @@ if(NOT DEFINED BUILD_EXAMPLES)
   set(BUILD_EXAMPLES OFF)
 endif()
 
-project(${LIB_NAME} VERSION 1.6.0 DESCRIPTION "Thread safe C ring buffer")
+project(${LIB_NAME} VERSION 1.6.1 DESCRIPTION "Thread safe C ring buffer")
 
 file(GLOB SOURCES "src/*.c")
 

@@ -9,7 +9,8 @@
   * @author  Jay Convertino(electrobs@gmail.com)
   * @date    12/01/2016
   * @version
-  * - 1.6.0 - Added new method for checking if the buffer is alive to help with mutex locks being abused.
+  * - 1.6.1 - Fixed examples build in cmake, Threads::Threads missing for Ubuntu 20.04.
+  * 1.6.0 - Added new method for checking if the buffer is alive to help with mutex locks being abused.
   * 1.5.4 - Cast pointer to char so the library isn't using GCC void * math.
   * 1.5.3 - Element size was being put into buffer size twice... buffers too big.
   * 1.5.2 - Changed size to long for unsigned for greater memory utilization.
